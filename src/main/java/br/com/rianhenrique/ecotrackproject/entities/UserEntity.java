@@ -21,5 +21,8 @@ public class UserEntity {
     private String email;
     @Column(name = "USU_SENHA")
     private String password;
+
+    @Column(name = "USU_PERMISSAO",columnDefinition = "CHAR(1) DEFAULT 'N'")
+    private String permission;
 }
 
