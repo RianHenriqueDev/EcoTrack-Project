@@ -1,9 +1,13 @@
 package br.com.rianhenrique.ecotrackproject.useCases.industry;
 
+import br.com.rianhenrique.ecotrackproject.entities.AddressEntity;
 import br.com.rianhenrique.ecotrackproject.entities.IndustryEntity;
+import br.com.rianhenrique.ecotrackproject.repositories.AddressRepository;
 import br.com.rianhenrique.ecotrackproject.repositories.IndustryRepository;
 import br.com.rianhenrique.ecotrackproject.repositories.UserRepository;
+import br.com.rianhenrique.ecotrackproject.utils.UtilsFunctions;
 import br.com.rianhenrique.ecotrackproject.utils.errors.EntityException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,18 +26,29 @@ public class IndustryUseCse {
     @Autowired
     private IndustryRepository industryRepository;
 
+    @Autowired
+    private AddressRepository addressRepository;
+
+    public AddressEntity createAddress(AddressEntity addressEntity) {
+        return addressRepository.save(addressEntity);
+    }
+
     public IndustryEntity createIndustry(IndustryEntity  industryEntity) {
 
-        var industry = this.industryRepository.findByEmailIgnoreCase(industryEntity.getEmail()).orElseThrow();
+
+        var industry = this.industryRepository.findByEmailIgnoreCase(industryEntity.getEmail()).orElse(null);
 
 
-        if(industry.getEmail() != null || industryEntity.getCnpj() != null) {
-            throw new EntityException("Usuário já registrado no banco de dados!", HttpStatus.CONFLICT);
+        if (industry == null) {
+
+            return this.industryRepository.save(industryEntity);
+        }else {
+            if (industry.getEmail() != null || industryEntity.getCnpj() != null) {
+                throw new EntityException("Usuário já registrado no banco de dados!", HttpStatus.CONFLICT);
+            }
         }
 
-
-        return this.industryRepository.save(industry);
-
+        return null;
 
     }
 
@@ -50,14 +65,16 @@ public class IndustryUseCse {
        return industry;
     }
 
-    public ResponseEntity<IndustryEntity> updateIndustry(IndustryEntity  industryEntity) {
+    public ResponseEntity<IndustryEntity> updateIndustry(Long id, IndustryEntity  industryEntity) {
 
-        var industry = this.industryRepository.findById(industryEntity.getId()).orElseThrow(()-> {
+        var industry = this.industryRepository.findById(id).orElseThrow(()-> {
             throw new EntityException("Industria não encontrada!",HttpStatus.NOT_FOUND);
         });
 
-        this.industryRepository.save(industry);
+        BeanUtils.copyProperties(industryEntity, industry, UtilsFunctions.getNameProperties(industryEntity));
 
-        return ResponseEntity.ok(industry);
+        var industrySaved = this.industryRepository.save(industry);
+
+        return ResponseEntity.ok(industrySaved);
     }
 }

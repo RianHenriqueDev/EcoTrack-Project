@@ -1,5 +1,6 @@
 package br.com.rianhenrique.ecotrackproject.controllers;
 
+import br.com.rianhenrique.ecotrackproject.entities.AddressEntity;
 import br.com.rianhenrique.ecotrackproject.entities.IndustryEntity;
 import br.com.rianhenrique.ecotrackproject.useCases.industry.IndustryUseCse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,20 @@ public class IndustryController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> createIndustry(IndustryEntity  ind) {
+    public ResponseEntity<Object> createIndustry(@RequestBody IndustryEntity  ind) {
 
+        System.out.println("Creando industry " + ind);
         var industry =  this.industryUseCse.createIndustry(ind);
 
         return ResponseEntity.ok().body(industry);
+    }
+
+    @PostMapping("/address")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> createAddress(@RequestBody AddressEntity addressEntity) {
+        this.industryUseCse.createAddress(addressEntity);
+
+        return ResponseEntity.ok().body(addressEntity);
     }
 
 
@@ -48,18 +58,12 @@ public class IndustryController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<IndustryEntity> updateIndustry(@PathVariable(name = "id") Long Id, IndustryEntity  industry) {
+    public ResponseEntity<IndustryEntity> updateIndustry(@PathVariable(name = "id") Long id, @RequestBody IndustryEntity  industry) {
 
-        IndustryEntity ind = new IndustryEntity();
 
-        ind.setCnpj(industry.getCnpj());
-        ind.setName(industry.getName());
-        ind.setEmail(industry.getEmail());
-        ind.setPhone(industry.getPhone());
+        this.industryUseCse.updateIndustry(id,industry);
 
-        this.industryUseCse.updateIndustry(ind);
-
-        return ResponseEntity.ok().body(ind);
+        return ResponseEntity.ok().body(industry);
     }
 
 
