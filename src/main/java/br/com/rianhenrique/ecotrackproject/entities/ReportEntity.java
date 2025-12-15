@@ -27,11 +27,11 @@ public class ReportEntity {
     @Column(name = "REL_RESIDUO_GERADO")
     private double wasteGenerated;
     @Column(name = "REL_RESIDUO_TRATADO")
-    private double wastreTreated;
+    private double wasteTreated;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "REL_PROCESSOS")
-    private ReportEnums status;
+    private ReportEnums status = ReportEnums.PENDENTE;
     @CurrentTimestamp
     @Column(name = "REL_DTACAD")
     private LocalDateTime createdAt;

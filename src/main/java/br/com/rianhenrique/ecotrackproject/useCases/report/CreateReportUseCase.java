@@ -41,9 +41,15 @@ public class CreateReportUseCase {
             throw  new EntityException("Relatório não encontrado", HttpStatus.NOT_FOUND);
         });
 
-        ReportEntity reportEntity = new ReportEntity();
-        reportEntity.setStatus(ReportEnums.valueOf(status));
 
-        BeanUtils.copyProperties(reportEntity,reportEntity, UtilsFunctions.getNameProperties(reportEntity));
+        if (report.getStatus() == ReportEnums.valueOf(status)){
+            throw  new EntityException("Você não pode mudar para o mesmo STATUS!", HttpStatus.CONFLICT);
+
+        }
+
+        report.setStatus(ReportEnums.valueOf(status));
+
+
+        this.reportRepository.save(report);
     }
 }

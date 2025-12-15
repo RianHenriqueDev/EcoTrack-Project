@@ -43,7 +43,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
             var grants = permissions.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase())).toList();
 
-
             UsernamePasswordAuthenticationToken authenticate = new UsernamePasswordAuthenticationToken(token.getSubject(), null, grants);
             SecurityContextHolder.getContext().setAuthentication(authenticate);
         }

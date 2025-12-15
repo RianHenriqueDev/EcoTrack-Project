@@ -24,7 +24,7 @@ public class ReportController {
 
 
     @PostMapping("")
-    @PreAuthorize("hasRole('INDUSTRY')")
+    @PreAuthorize("hasRole('USUARIO')")
     @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<ReportEntity> createReport(@RequestBody  ReportEntity reportEntity) {
 
@@ -34,6 +34,7 @@ public class ReportController {
     }
 
     @GetMapping("/industry/{id}")
+    @PreAuthorize("hasRole('USUARIO')")
     @SecurityRequirement(name = "jwt_auth")
     public List<ReportEntity> getReport(@PathVariable Long id) {
 
@@ -48,11 +49,12 @@ public class ReportController {
         return this.createReportUseCase.findBystatus("PENDENTE");
     }
 
-    @PutMapping("/{id}/approve")
+    @PutMapping("/approve/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "jwt_auth")
     public void approveReport(@PathVariable Long id) {
 
+        System.out.println("ENTROUUU");
         this.createReportUseCase.modifyReportByStatus(id,"APROVADO");
     }
 
