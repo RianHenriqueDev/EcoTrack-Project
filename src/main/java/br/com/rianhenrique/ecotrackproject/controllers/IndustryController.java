@@ -3,6 +3,7 @@ package br.com.rianhenrique.ecotrackproject.controllers;
 import br.com.rianhenrique.ecotrackproject.entities.AddressEntity;
 import br.com.rianhenrique.ecotrackproject.entities.IndustryEntity;
 import br.com.rianhenrique.ecotrackproject.useCases.industry.IndustryUseCse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class IndustryController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> createIndustry(@RequestBody IndustryEntity  ind) {
 
         System.out.println("Creando industry " + ind);
@@ -33,6 +35,7 @@ public class IndustryController {
 
     @PostMapping("/address")
     @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> createAddress(@RequestBody AddressEntity addressEntity) {
         this.industryUseCse.createAddress(addressEntity);
 
@@ -42,12 +45,14 @@ public class IndustryController {
 
     @GetMapping("")
     @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "jwt_auth")
     public List<IndustryEntity> findAll() {
         return this.industryUseCse.findAll();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<IndustryEntity> findById(@PathVariable(name = "id") Long id) {
 
         var industry = this.industryUseCse.findIndustryById(id);
@@ -58,6 +63,7 @@ public class IndustryController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<IndustryEntity> updateIndustry(@PathVariable(name = "id") Long id, @RequestBody IndustryEntity  industry) {
 
 

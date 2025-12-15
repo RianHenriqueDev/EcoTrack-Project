@@ -18,7 +18,7 @@ public class ReportEntity {
     private Long id;
 
     @Column(name = "REL_ID_INDUSTRIA",nullable = false)
-    private Long id_industry;
+    private Long idIndustry;
     @Column(name = "REL_DTAENT")
     private LocalDateTime reportDate;
     @Column(name = "REL_CUSTO")
